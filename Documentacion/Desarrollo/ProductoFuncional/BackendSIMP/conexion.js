@@ -4,7 +4,7 @@ const conexion = mysql.createConnection({
     host: 'localhost',
     database: 'simpUv',
     user: 'root',
-    password: '',
+    password: 'Adrian50616930',//borrar
 });
 
 conexion.connect(error => {
