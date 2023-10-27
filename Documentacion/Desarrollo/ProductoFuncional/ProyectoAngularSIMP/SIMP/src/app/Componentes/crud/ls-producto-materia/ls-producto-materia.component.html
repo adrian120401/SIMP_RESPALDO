@@ -20,14 +20,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let pr of productosMateria | async">
-                        <td>{{ pr.IdProductoMateria }}</td>
-                        <td>{{ pr.NombreProductoPlantilla }}</td>
-                        <td>{{ pr.NombreProducto }}</td>
-                        <td>
-                            <a class="btn btn-danger" (click)="borrarProductoMateria(pr.IdProductoMateria)">Borrar</a>
-                        </td>
-                    </tr>
+                  <ng-container *ngIf="productosMateria.length > 0; else noDataMessage">
+                      <tr *ngFor="let pr of productosMateria">
+                          <td>{{ pr.IdProductoMateria }}</td>
+                          <td>{{ pr.NombreProductoPlantilla }}</td>
+                          <td>{{ pr.NombreProducto }}</td>
+                          <td>
+                              <a class="btn btn-danger" (click)="borrarProductoMateria(pr.IdProductoMateria)">Borrar</a>
+                          </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noDataMessage>
+                      <tr>
+                        <td colspan="4">{{messageError}}</td>
+                      </tr>
+                    </ng-template>
                 </tbody>
             </table>
         </div>

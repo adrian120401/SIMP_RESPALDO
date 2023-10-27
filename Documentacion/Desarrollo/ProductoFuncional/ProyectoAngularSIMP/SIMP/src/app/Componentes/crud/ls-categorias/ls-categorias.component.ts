@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
 import { CategoriaModel } from 'src/app/Modelos/Categoria.model';
 import { ProductosService } from 'src/app/servicios/Productos/productos.service';
 
@@ -11,24 +11,45 @@ import { ProductosService } from 'src/app/servicios/Productos/productos.service'
 export class LsCategoriasComponent implements OnInit {
 
   CategoriaBusqueda = ""
-  categorias: Observable<CategoriaModel[]> | undefined
+  categorias: CategoriaModel[] = []
+  messageError: string = ''
 
   constructor(private categoriasService: ProductosService){}
 
   ngOnInit() {
-      this.categorias = this.categoriasService.obtenerCategorias();
+      this.categoriasService.obtenerCategorias().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.categorias = data;
+        }else if (typeof data === 'string') {
+          this.categorias = []
+          this.messageError = data
+        }
+      });
   }
 
   buscarCategoria(){
-    this.categorias = this.categoriasService.obtenerCategoria(this.CategoriaBusqueda)
+    this.categoriasService.obtenerCategoria(this.CategoriaBusqueda).subscribe(data=> {
+      if (Array.isArray(data)) {
+        this.categorias = data;
+      }else if (typeof data === 'string') {
+        this.categorias = []
+        this.messageError = data
+      }
+    })
   }
 
   borrarCategoria(id:string){
-    this.categoriasService.eliminarCategoria(id).subscribe(data=>{
-      console.log(data);
-    })
-
-    this.categorias = this.categoriasService.obtenerCategorias()
+    this.categoriasService.eliminarCategoria(id)
+    .subscribe((data) => {
+      this.categoriasService.obtenerCategorias().subscribe(data => {
+        if (Array.isArray(data)) {
+          this.categorias = data;
+        }else if (typeof data === 'string') {
+          this.categorias = []
+          this.messageError = data
+        }
+      });
+    });
   }
 
 }

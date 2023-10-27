@@ -11,24 +11,47 @@ import { UnidadMedidaModel } from 'src/app/Modelos/Unidad_Medida.model';
 export class LsUnidadMedidaComponent implements OnInit {
 
   UnidadBusqueda = ""
-  unidades: Observable<UnidadMedidaModel[]> | undefined
+  unidades: UnidadMedidaModel[] = []
+  messageError:string = ''
 
   constructor(private unidadService: ProductosService){}
 
   ngOnInit() {
-      this.unidades = this.unidadService.obtenerUnidadMedidas();
+      this.unidadService.obtenerUnidadMedidas().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.unidades = data;
+        }else if (typeof data === 'string') {
+          this.unidades = []
+          this.messageError = data
+        }
+      }
+    );
   }
 
   buscarUnidadMedida(){
-    this.unidades = this.unidadService.obtenerUnidadMedida(this.UnidadBusqueda)
+    this.unidadService.obtenerUnidadMedida(this.UnidadBusqueda).subscribe(data=>{
+      if (Array.isArray(data)) {
+        this.unidades = data;
+      }else if (typeof data === 'string') {
+        this.unidades = []
+        this.messageError = data
+      }
+    }
+  )
   }
 
   borrarUnidadMedida(id:string){
     this.unidadService.eliminarUnidadMedida(id).subscribe(data=>{
-      console.log(data);
+        this.unidadService.obtenerUnidadMedidas().subscribe(data=>{
+          if (Array.isArray(data)) {
+            this.unidades = data;
+          }else if (typeof data === 'string') {
+            this.unidades = []
+            this.messageError = data
+          }
+        }
+      )
     })
-
-    this.unidades = this.unidadService.obtenerUnidadMedidas()
   }
 
 }

@@ -11,20 +11,35 @@ import { ProductoMateriaModel } from 'src/app/Modelos/Producto_Materia.model';
 export class LsProductoMateriaComponent implements OnInit {
 
   UnidadBusqueda = ""
-  productosMateria: Observable<ProductoMateriaModel[]> | undefined
+  productosMateria: ProductoMateriaModel[] = []
+  messageError:string = ''
 
   constructor(private productosMateriaService: ProductosService){}
 
   ngOnInit() {
-      this.productosMateria = this.productosMateriaService.obtenerProductoMaterias();
+      this.productosMateriaService.obtenerProductoMaterias().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.productosMateria = data;
+        }else if (typeof data === 'string') {
+          this.productosMateria = []
+          this.messageError = data
+        }
+      }
+    );
   }
 
   borrarProductoMateria(IdProductoMateria: string){
     this.productosMateriaService.eliminarProductoMateria(IdProductoMateria).subscribe(data=>{
-      console.log(data);
+      this.productosMateriaService.obtenerProductoMaterias().subscribe(data=>{
+          if (Array.isArray(data)) {
+            this.productosMateria = data;
+          }else if (typeof data === 'string') {
+            this.productosMateria = []
+            this.messageError = data
+          }
+        }
+      )
     })
-
-    this.productosMateria = this.productosMateriaService.obtenerProductoMaterias();
   }
 
 }

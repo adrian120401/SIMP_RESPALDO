@@ -32,16 +32,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let un of unidades | async">
-                        <td>{{ un.IdUnidadMedida }}</td>
-                        <td>{{ un.UnidadMedida }}</td>
-                        <td>
-                            <a class="btn btn-warning" [routerLink]="['/unidades/editar/', un.IdUnidadMedida]">Editar</a>
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" (click)="borrarUnidadMedida(un.IdUnidadMedida)">Borrar</a>
-                        </td>
-                    </tr>
+                  <ng-container *ngIf="unidades.length > 0; else noDataMessage">
+                      <tr *ngFor="let un of unidades">
+                          <td>{{ un.IdUnidadMedida }}</td>
+                          <td>{{ un.UnidadMedida }}</td>
+                          <td>
+                              <a class="btn btn-warning" [routerLink]="['/unidades/editar/', un.IdUnidadMedida]">Editar</a>
+                          </td>
+                          <td>
+                              <a class="btn btn-danger" (click)="borrarUnidadMedida(un.IdUnidadMedida)">Borrar</a>
+                          </td>
+                      </tr>
+                    </ng-container>
+                    <ng-template #noDataMessage>
+                      <tr>
+                        <td colspan="4">{{messageError}}</td>
+                      </tr>
+                    </ng-template>
                 </tbody>
             </table>
         </div>

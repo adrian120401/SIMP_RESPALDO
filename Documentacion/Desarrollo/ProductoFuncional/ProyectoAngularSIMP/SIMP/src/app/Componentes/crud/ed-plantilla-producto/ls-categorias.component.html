@@ -3,9 +3,7 @@
         <h1>Categorias</h1>
         <div class="m-3 container text-center row justify-content-md-center">
             <div class="ZonaBotones container col-lg-8">
-                <button class="btn btn-success" type="button" [routerLink]="['/categorias/agregar']">
-                  <img src="./assets/Imagenes/agregar.png" alt="Añadir item">
-                </button>
+                <button class="btn btn-success" type="button" [routerLink]="['/categorias/agregar']">Agregar</button>
             </div>
 
 
@@ -25,15 +23,14 @@
             <table class="table table-dark table-sm">
                 <thead class="thead-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>Descripción Categoria</th>
+                        <th>ID Categoria</th>
+                        <th>Descripcion Categoria</th>
                         <th>Editar</th>
                         <th>Borrar</th>
                     </tr>
                 </thead>
                 <tbody>
-                  <ng-container *ngIf="categorias.length > 0; else noDataMessage">
-                    <tr *ngFor="let ca of categorias">
+                    <tr *ngFor="let ca of categorias | async">
                         <td>{{ ca.IdCategoria }}</td>
                         <td>{{ ca.DescripcionCategoria }}</td>
                         <td>
@@ -43,12 +40,6 @@
                             <a class="btn btn-danger" (click)="borrarCategoria(ca.IdCategoria)">Borrar</a>
                         </td>
                     </tr>
-                  </ng-container>
-                  <ng-template #noDataMessage>
-                    <tr>
-                      <td colspan="4">{{messageError}}</td>
-                    </tr>
-                  </ng-template>
                 </tbody>
             </table>
         </div>

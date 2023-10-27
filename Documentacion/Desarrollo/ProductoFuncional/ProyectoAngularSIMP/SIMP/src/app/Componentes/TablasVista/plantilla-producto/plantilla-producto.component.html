@@ -43,7 +43,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                     <tr *ngFor="let pla of plantillaProductos | async">
+                  <ng-container *ngIf="plantillaProductos.length > 0; else noDataMessage">
+                     <tr *ngFor="let pla of plantillaProductos">
                         <td>{{pla.IdPlantillaProducto}}</td>
                         <td>{{pla.NombreProductoPlantilla}}</td>
                         <td>{{pla.ValorVenta}}</td>
@@ -54,7 +55,12 @@
                           <a class="btn btn-danger" (click)="borrarPlantillaProducto(pla.IdPlantillaProducto)">Borrar</a>
                       </td>
                       </tr>
-
+                   </ng-container>
+                   <ng-template #noDataMessage>
+                    <tr>
+                      <td colspan="5">{{messageError}}</td>
+                    </tr>
+                  </ng-template>
                 </tbody>
             </table>
         </div>

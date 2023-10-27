@@ -10,24 +10,48 @@ import { ProductosService } from 'src/app/servicios/Productos/productos.service'
 })
 export class PlantillaProductoComponent {
   PlantillaBusqueda = ""
-  plantillaProductos: Observable<PlantillaProductoModel[]> | undefined
+  plantillaProductos: PlantillaProductoModel[] = []
+  messageError:string = ''
 
 
   constructor(private plantillaService: ProductosService){}
 
   ngOnInit() {
-    this.plantillaProductos = this.plantillaService.obtenerPlantillaProductos();
+    this.plantillaService.obtenerPlantillaProductos().subscribe(data=>{
+      if (Array.isArray(data)) {
+        this.plantillaProductos = data;
+      }else if (typeof data === 'string') {
+        this.plantillaProductos = []
+        this.messageError = data
+      }
+    }
+  );
 }
 
 buscarPlantillaProducto(){
-  this.plantillaProductos = this.plantillaService.obtenerPlantillaProducto(this.PlantillaBusqueda)
+  this.plantillaService.obtenerPlantillaProducto(this.PlantillaBusqueda).subscribe(data=>{
+    if (Array.isArray(data)) {
+      this.plantillaProductos = data;
+    }else if (typeof data === 'string') {
+      this.plantillaProductos = []
+      this.messageError = data
+    }
+  }
+)
 }
 
 borrarPlantillaProducto(id:string){
   this.plantillaService.eliminarPlantillaProducto(id).subscribe(data=>{
-    console.log(data);
+    this.plantillaService.obtenerPlantillaProductos().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.plantillaProductos = data;
+        }else if (typeof data === 'string') {
+          this.plantillaProductos = []
+          this.messageError = data
+        }
+      }
+    )
   })
-
-  this.plantillaProductos = this.plantillaService.obtenerPlantillaProductos()
 }
+
 }

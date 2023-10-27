@@ -9,8 +9,8 @@ import { ProductosService } from 'src/app/servicios/Productos/productos.service'
 })
 export class ProductoMateriaPrimaComponent {
   ProductosMateriaPrimaBusqueda = "";
-  ProductosMateriaPrimaModel: Observable<ProductoMateriaPrimaModel[]> | undefined;
-
+  ProductosMateriaPrimaModel: ProductoMateriaPrimaModel[] = []
+  messageError:string = ''
 
   constructor(
     private ProductosService: ProductosService) { }
@@ -18,18 +18,41 @@ export class ProductoMateriaPrimaComponent {
 
 
   ngOnInit() {
-    this.ProductosMateriaPrimaModel = this.ProductosService.obtenerProductosMateriaPrima();
+    this.ProductosService.obtenerProductosMateriaPrima().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.ProductosMateriaPrimaModel = data;
+        }else if (typeof data === 'string') {
+          this.ProductosMateriaPrimaModel = []
+          this.messageError = data
+        }
+      }
+      );
   }
 
   buscarProductoMateriaPrima(){
-    this.ProductosMateriaPrimaModel = this.ProductosService.obtenerProductoMateriaPrima(this.ProductosMateriaPrimaBusqueda)
+    this.ProductosService.obtenerProductoMateriaPrima(this.ProductosMateriaPrimaBusqueda).subscribe(data=>{
+      if (Array.isArray(data)) {
+        this.ProductosMateriaPrimaModel = data;
+      }else if (typeof data === 'string') {
+        this.ProductosMateriaPrimaModel = []
+        this.messageError = data
+      }
+    }
+    )
   }
 
   borrarProductoMateriaPrima(id: string){
     this.ProductosService.eliminarProductoMateriaPrima(id).subscribe((data) => {
-      console.log(data)
+      this.ProductosService.obtenerProductosMateriaPrima().subscribe(data=>{
+        if (Array.isArray(data)) {
+          this.ProductosMateriaPrimaModel = data;
+        }else if (typeof data === 'string') {
+          this.ProductosMateriaPrimaModel = []
+          this.messageError = data
+        }
+      }
+    );
     })
-
-    this.ProductosMateriaPrimaModel = this.ProductosService.obtenerProductosMateriaPrima();
   }
+
 }

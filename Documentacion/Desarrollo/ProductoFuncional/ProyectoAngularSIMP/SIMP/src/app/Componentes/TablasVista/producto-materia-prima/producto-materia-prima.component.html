@@ -45,7 +45,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                     <tr *ngFor="let ProductoMateriaPrima of ProductosMateriaPrimaModel | async">
+                  <ng-container *ngIf="ProductosMateriaPrimaModel.length > 0; else noDataMessage">
+                     <tr *ngFor="let ProductoMateriaPrima of ProductosMateriaPrimaModel">
                         <td>{{ProductoMateriaPrima.IdProductoMateriaPrima}}</td>
                         <td>{{ProductoMateriaPrima.NombreProducto}}</td>
                         <td>{{ProductoMateriaPrima.DescripcionProductoMateriaPrima}}</td>
@@ -60,6 +61,12 @@
                               (click)="borrarProductoMateriaPrima(ProductoMateriaPrima.IdProductoMateriaPrima)">Borrar</a>
                         </td>
                       </tr>
+                    </ng-container>
+                    <ng-template #noDataMessage>
+                      <tr>
+                        <td colspan="7">{{messageError}}</td>
+                      </tr>
+                    </ng-template>
                 </tbody>
             </table>
         </div>
